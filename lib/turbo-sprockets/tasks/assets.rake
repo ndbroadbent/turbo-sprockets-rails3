@@ -78,11 +78,6 @@ namespace :assets do
         )
         compiler.compile
       end
-
-      if config.assets.clean_after_precompile
-        cleaner = Sprockets::StaticCleaner.new(env, target, config.assets.digest_files)
-        cleaner.remove_old_assets!
-      end
     end
 
     task :all => ["assets:cache:clean"] do

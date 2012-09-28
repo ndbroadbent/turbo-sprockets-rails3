@@ -1,7 +1,6 @@
 require "action_controller/railtie"
 
 module Sprockets
-  autoload :StaticCleaner,            "sprockets/static_cleaner"
   autoload :StaticNonDigestGenerator, "sprockets/static_non_digest_generator"
 end
 
