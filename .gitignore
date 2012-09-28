@@ -4,3 +4,4 @@ Gemfile.lock
 tmp
 .rbenv-version
 .rvmrc
+*.gem
