@@ -1,0 +1,6 @@
+.bundle/
+pkg/
+Gemfile.lock
+tmp
+.rbenv-version
+.rvmrc
