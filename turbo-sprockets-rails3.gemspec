@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.summary     = "Supercharge your Rails 3 asset pipeline"
   s.description = "Speeds up the Rails 3 asset pipeline by only recompiling changed assets"
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["test/**/*"]
 
   s.add_runtime_dependency "sprockets", "~> 2.1.3"
