@@ -33,9 +33,10 @@ Go on, run `rake assets:precompile` again, and it should be a whole lot faster t
 
 Enjoy your lightning fast deploys!
 
-#### Automatic clean up of old assets
+<!--#### Automatic clean up of old assets
 
 By default, the `assets:precompile` task now deletes out-of-date assets after a new version is compiled. If you don't want to automatically delete old assets, you can turn off this behaviour by setting `config.assets.clean_after_precompile = false` in `config/environments/production.rb`.
+-->
 
 ## Deployments
 
@@ -45,10 +46,10 @@ You won't be able to do an 'incremental update' on heroku, since your `public/as
 folder will be empty at the start of each push. However, this gem can still cut your
 precompile time in half, since it only compiles assets once to generate both digest and non-digest assets.
 
-### Capistrano
+<!--### Capistrano
 
 If you are deploying with Capistrano, it's not a good idea to symlink `public/assets` to a shared assets folder, because the asset cleanup task would delete the current assets before the deploy has finished. Keeping a separate copy of `public/assets` for each release also means that you can safely roll back to a previous release.
-The best approach would be to add a deploy step that copies the `public/assets` folder from your previous release into the current release, before running `assets:precompile`.
+The best approach would be to add a deploy step that copies the `public/assets` folder from your previous release into the current release, before running `assets:precompile`.-->
 
 ## Debugging
 

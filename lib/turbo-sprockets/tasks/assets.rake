@@ -50,6 +50,7 @@ namespace :assets do
 
       config = Rails.application.config
       config.assets.compile = true
+      config.assets.clean_after_precompile = false if config.assets.clean_after_precompile.nil?
       config.assets.digest  = digest unless digest.nil?
       config.assets.digest_files   ||= {}
       config.assets.source_digests ||= {}
@@ -78,7 +79,7 @@ namespace :assets do
         compiler.compile
       end
 
-      unless config.assets.clean_after_precompile == false
+      if config.assets.clean_after_precompile
         cleaner = Sprockets::StaticCleaner.new(env, target, config.assets.digest_files)
         cleaner.remove_old_assets!
       end
