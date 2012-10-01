@@ -1,6 +1,6 @@
 # Turbo Sprockets for Rails 3.2.x
 
-* Speeds up the Rails 3 asset pipeline by only recompiling changed assets
+* Speeds up the Rails 3 asset pipeline by only recompiling changed assets, based on a hash of their source files
 * Generates non-digest assets from precompiled assets - Only compile once!
 
 This is a backport of the work I've done for Rails 4.0.0, released as
