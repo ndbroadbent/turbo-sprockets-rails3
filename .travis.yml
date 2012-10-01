@@ -2,8 +2,8 @@ language: ruby
 script: bundle install; bundle exec rake test
 rvm:
   - 1.8.7
+  - 1.9.2
   - 1.9.3
-  - ruby-head
 gemfile:
   - gemfiles/Gemfile-rails.3.2.0
   - gemfiles/Gemfile-rails.3.2.x

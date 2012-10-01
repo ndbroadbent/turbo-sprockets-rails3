@@ -3,8 +3,15 @@ require 'bundler/setup'
 
 require 'turbo-sprockets-rails3'
 require 'fileutils'
-require 'minitest/unit'
-require 'minitest/autorun'
+
+# Require minitest for 1.9 and test/unit for 1.8
+# 'active_support/test_case' supports both.
+begin
+  require 'minitest/autorun'
+rescue LoadError
+  require 'test/unit'
+end
+
 require 'active_support/test_case'
 require 'rails/generators'
 require "active_support/testing/isolation"

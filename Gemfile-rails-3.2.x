@@ -8,4 +8,3 @@ gem "jquery-rails"
 
 gem "uglifier", :require => false
 gem "mocha",    :require => false
-gem "minitest", '~> 2.12', :platform => :mri_18
