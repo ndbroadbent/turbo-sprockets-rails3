@@ -1,4 +1,4 @@
-# Turbo Sprockets for Rails 3
+# Turbo Sprockets for Rails 3.2.x
 
 * Speeds up the Rails 3 asset pipeline by only recompiling changed assets
 * Generates non-digest assets from precompiled assets - Only compile once!
@@ -11,10 +11,15 @@ a gem for Rails 3.2.x. (See [sprockets-rails #21](https://github.com/rails/sproc
 
 Please test this out thoroughly on your local machine before deploying to a production site, and open an issue on GitHub if you have any problems. By using this software you agree to the terms and conditions in the [MIT license](https://github.com/ndbroadbent/turbo-sprockets-rails3/blob/master/MIT-LICENSE).
 
-## Dependencies
+## Supported Versions
 
-* sprockets `~> 2.1.3`
-* railties `~> 3.2.0`
+### Ruby
+
+All versions of Ruby that are supported by Rails 3.2.x, including 1.9.3, 1.9.2, 1.8.7 and REE.
+
+### Rails
+
+This gem only supports Rails `3.2.0` or higher. Rails `3.1.x` support is not available at this time because it depends on a very outdated version of `sprockets`.
 
 ## Usage
 
