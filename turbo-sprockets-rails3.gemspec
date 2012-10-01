@@ -14,6 +14,6 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_runtime_dependency "sprockets", "~> 2.1.3"
-  s.add_runtime_dependency "railties",  "~> 3.2.0"
+  s.add_runtime_dependency "sprockets", ">= 2.0.0"
+  s.add_runtime_dependency "railties",  ">= 3.1.0"
 end

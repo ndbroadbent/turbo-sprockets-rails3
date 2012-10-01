@@ -2,7 +2,7 @@ require "fileutils"
 
 # Clear all assets tasks from sprockets railtie
 Rake::Task.tasks.each do |task|
-  if task.name.starts_with? 'assets:'
+  if task.name.match '^assets:'
     task.clear_prerequisites.clear_actions
   end
 end
