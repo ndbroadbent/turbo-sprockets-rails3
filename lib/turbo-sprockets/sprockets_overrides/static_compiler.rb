@@ -55,7 +55,7 @@ module Sprockets
       end
 
       if @manifest
-        write_manifest(source_digests: @source_digests, digest_files: @digest_files)
+        write_manifest(:source_digests => @source_digests, :digest_files => @digest_files)
       end
 
       # Store digests in Rails config. (Important if non-digest is run after primary)
