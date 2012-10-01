@@ -31,8 +31,12 @@ module Sprockets
         # to calculate a digest of the concatenated source files
         asset = env.find_asset(logical_path, :process => false)
 
-        # Force digest to UTF-8, otherwise YAML dumps ASCII-8BIT as !binary
-        @source_digests[logical_path] = asset.digest.force_encoding("UTF-8")
+        # Force digest to UTF-8 for Ruby 1.9, otherwise YAML dumps ASCII-8BIT as !binary
+        @source_digests[logical_path] = if RUBY_VERSION.to_f >= 1.9
+          asset.digest.force_encoding("UTF-8")
+        else
+          asset.digest
+        end
 
         # Recompile if digest has changed or compiled digest file is missing
         current_digest_file = @current_digest_files[logical_path]
