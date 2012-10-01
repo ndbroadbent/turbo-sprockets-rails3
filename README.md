@@ -15,11 +15,12 @@ Please test this out thoroughly on your local machine before deploying to a prod
 
 ### Ruby
 
-All versions of Ruby that are supported by Rails 3.2.x, including 1.9.3, 1.9.2, 1.8.7 and REE.
+All versions of Ruby that are supported by Rails `3.2.x`, including `1.9.3`, `1.9.2`, `1.8.7` and REE.
 
 ### Rails
 
-This gem only supports Rails `3.2.0` or higher. Rails `3.1.x` support is not available at this time because it depends on a very outdated version of `sprockets`.
+This gem only supports Rails `3.2.0` or higher.
+Rails `3.1.x` support is not available at this time, because it depends on an outdated version of `sprockets`.
 
 ## Usage
 
