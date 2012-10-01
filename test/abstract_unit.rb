@@ -3,6 +3,7 @@ require 'bundler/setup'
 
 require 'turbo-sprockets-rails3'
 require 'fileutils'
+require 'minitest/unit'
 require 'minitest/autorun'
 require 'active_support/test_case'
 require 'rails/generators'

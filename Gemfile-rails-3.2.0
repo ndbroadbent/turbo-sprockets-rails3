@@ -4,6 +4,8 @@ source "http://rubygems.org"
 gemspec
 
 gem 'rails', '3.2.0'
+gem "jquery-rails"
 
 gem "uglifier", :require => false
 gem "mocha",    :require => false
+gem "minitest", :platform => :mri_18
