@@ -63,14 +63,17 @@ module Sprockets
           env.logger.debug "Stripped digests, copied to #{logical_path}, and created gzipped asset"
 
         else
-          # Otherwise, treat file as binary and copy it
-          FileUtils.cp_r abs_digest_path, abs_logical_path, :remove_destination => true
-          env.logger.debug "Copied binary asset to #{logical_path}"
+          # Otherwise, treat file as binary and copy it.
+          # Ignore paths that have no digests, such as READMEs
+          unless abs_digest_path == abs_logical_path
+            FileUtils.cp_r abs_digest_path, abs_logical_path, :remove_destination => true
+            env.logger.debug "Copied binary asset to #{logical_path}"
 
-          # Copy gzipped asset if exists
-          if File.exist? "#{abs_digest_path}.gz"
-            FileUtils.cp_r "#{abs_digest_path}.gz", "#{abs_logical_path}.gz", :remove_destination => true
-            env.logger.debug "Copied gzipped asset to #{logical_path}.gz"
+            # Copy gzipped asset if exists
+            if File.exist? "#{abs_digest_path}.gz"
+              FileUtils.cp_r "#{abs_digest_path}.gz", "#{abs_logical_path}.gz", :remove_destination => true
+              env.logger.debug "Copied gzipped asset to #{logical_path}.gz"
+            end
           end
         end
       end
