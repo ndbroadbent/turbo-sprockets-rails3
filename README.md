@@ -51,7 +51,7 @@ You won't be able to do an 'incremental update' on heroku, since your `public/as
 folder will be empty at the start of each push. However, this gem can still cut your
 precompile time in half, since it only needs to compile assets once.
 
-However, if you want to make the most of `turbo-sprockets-rails3`, you can run `assets:precompile` on your local machine and commit the compiled assets. When you push compiled assets to Heroku, it will automatically skip the `assets:precompile` task.
+If you want to make the most of `turbo-sprockets-rails3`, you can run `assets:precompile` on your local machine and commit the compiled assets. When you push compiled assets to Heroku, it will automatically skip the `assets:precompile` task.
 
 I've automated this process in a Rake task for my own projects. My task creates a deployment repo at `tmp/heroku_deploy` so that you can keep working while deploying, and it also rebases and amends the assets commit to keep your repo's history from growing out of control. You can find the deploy task in a gist at https://gist.github.com/3802355. Save this file to `lib/tasks/deploy.rake`, make sure you have added a `heroku` remote to your repo, and you will now be able to run `rake deploy` to deploy your app to Heroku.
 
