@@ -1,5 +1,7 @@
 # Turbo Sprockets for Rails 3.2.x
 
+[![Build Status](https://secure.travis-ci.org/ndbroadbent/turbo-sprockets-rails3.png)](http://travis-ci.org/ndbroadbent/turbo-sprockets-rails3)
+
 * Speeds up the Rails 3 asset pipeline by only recompiling changed assets, based on a hash of their source files
 * Generates both non-fingerprinted and fingerprinted assets from a single compile
 
