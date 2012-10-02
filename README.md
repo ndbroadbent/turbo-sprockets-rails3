@@ -1,7 +1,7 @@
 # Turbo Sprockets for Rails 3.2.x
 
 * Speeds up the Rails 3 asset pipeline by only recompiling changed assets, based on a hash of their source files
-* Generates non-digest assets from precompiled assets - Only compile once!
+* Generates both non-fingerprinted and fingerprinted assets from a single compile
 
 This is a backport of the work I've done for Rails 4.0.0, released as
 a gem for Rails 3.2.x. (See [sprockets-rails #21](https://github.com/rails/sprockets-rails/pull/21) and [sprockets #367](https://github.com/sstephenson/sprockets/pull/367) for the Rails 4 pull requests.)
@@ -49,12 +49,11 @@ Enjoy your lightning fast deploys!
 
 You won't be able to do an 'incremental update' on heroku, since your `public/assets`
 folder will be empty at the start of each push. However, this gem can still cut your
-precompile time in half, since it only compiles assets once to generate both digest and non-digest assets.
+precompile time in half, since it only needs to compile assets once.
 
-If you want to make the most of `turbo-sprockets-rails3`, you can run `assets:precompile` on your local machine
-and commit the compiled assets. When you push compiled assets to Heroku, it automatically skips the `assets:precompile` task.
+However, if you want to make the most of `turbo-sprockets-rails3`, you can run `assets:precompile` on your local machine and commit the compiled assets. When you push compiled assets to Heroku, it will automatically skip the `assets:precompile` task.
 
-I've automated this process in a Rake task for my own projects. It uses a temporary deploy repo so you can keep working, and it also rebases and amends the assets commit so your repo doesn't grow out of control. You can find my deploy task in a gist at https://gist.github.com/3802355. Save this file to `lib/tasks/deploy.rake`, and run `rake deploy` to deploy your app to Heroku.
+I've automated this process in a Rake task for my own projects. My task creates a deployment repo at `tmp/heroku_deploy` so that you can keep working while deploying, and it also rebases and amends the assets commit to keep your repo's history from growing out of control. You can find the deploy task in a gist at https://gist.github.com/3802355. Save this file to `lib/tasks/deploy.rake`, make sure you have added a `heroku` remote to your repo, and you will now be able to run `rake deploy` to deploy your app to Heroku.
 
 ## Debugging
 
