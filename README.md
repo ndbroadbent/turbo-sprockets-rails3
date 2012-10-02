@@ -40,6 +40,17 @@ Go on, run `rake assets:precompile` again, and it should be a whole lot faster t
 
 Enjoy your lightning fast deploys!
 
+## Compatibility
+
+### [asset_sync](https://github.com/rumblelabs/asset_sync)
+
+Fully compatible. Just don't use the experimental `AssetSync.config.manifest = true` configuration option until
+[my patch](https://github.com/rumblelabs/asset_sync/pull/110) has been merged.
+
+<hr/>
+
+Please let me know if you have any problems with other gems, and I will either fix it, or make a note of the problem here.
+
 ## Deployments
 
 ### Capistrano
