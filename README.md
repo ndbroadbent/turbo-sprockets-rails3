@@ -45,7 +45,7 @@ Enjoy your lightning fast deploys!
 ### [asset_sync](https://github.com/rumblelabs/asset_sync)
 
 Fully compatible. Just don't use the experimental `AssetSync.config.manifest = true` configuration option until
-[my patch](https://github.com/rumblelabs/asset_sync/pull/110) has been merged.
+[my asset_sync patch](https://github.com/rumblelabs/asset_sync/pull/110) has been merged.
 
 <hr/>
 
