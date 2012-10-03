@@ -1,5 +1,6 @@
 language: ruby
 script: bundle install; bundle exec rake test
+
 rvm:
   - 1.9.3
   - 1.9.2
