@@ -64,9 +64,7 @@ namespace :assets do
       # if assets have been previously compiled with digests.
       if !config.assets.digest && config.assets.digest_files.any?
         generator = Sprockets::StaticNonDigestGenerator.new(env, target, config.assets.precompile,
-          :digest_files   => config.assets.digest_files,
-          :source_digests => config.assets.source_digests
-        )
+          :digest_files => config.assets.digest_files)
         generator.generate
       else
         compiler = Sprockets::StaticCompiler.new(env, target, config.assets.precompile,
