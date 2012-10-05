@@ -36,15 +36,7 @@ if defined?(Sprockets::StaticCompiler)
           # to calculate a digest of the concatenated source files
           asset = env.find_asset(logical_path, :process => false)
 
-          # Force digest and path to UTF-8 for Ruby 1.9, otherwise YAML dumps ASCII-8BIT as !binary
-          if RUBY_VERSION.to_f >= 1.9
-            utf8_digest = asset.digest.force_encoding("UTF-8")
-            utf8_path = logical_path.force_encoding("UTF-8")
-          else
-            utf8_digest, utf8_path = asset.digest, logical_path
-          end
-
-          @source_digests[utf8_path] = utf8_digest
+          @source_digests[logical_path] = asset.digest
 
           # Recompile if digest has changed or compiled digest file is missing
           current_digest_file = @current_digest_files[logical_path]
@@ -64,6 +56,14 @@ if defined?(Sprockets::StaticCompiler)
             env.logger.debug "Not compiling #{logical_path}, sources digest has not changed " <<
                              "(#{@source_digests[logical_path][0...7]})"
           end
+        end
+
+        # Encode all keys and values as UTF-8 for Ruby 1.9, otherwise YAML stores them as !binary
+        if RUBY_VERSION.to_f >= 1.9
+          utf8_sources, utf8_digests = {}, {}
+          @source_digests.each { |k, v| utf8_sources[k.encode("UTF-8")] = v.encode("UTF-8") }
+          @digest_files.each   { |k, v| utf8_digests[k.encode("UTF-8")] = v.encode("UTF-8") }
+          @source_digests, @digest_files = utf8_sources, utf8_digests
         end
 
         if @manifest
