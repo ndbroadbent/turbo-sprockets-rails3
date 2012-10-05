@@ -58,7 +58,7 @@ if defined?(Sprockets::StaticCompiler)
           end
         end
 
-        # Encode all keys and values as UTF-8 for Ruby 1.9,
+        # Encode all filenames & digests as UTF-8 for Ruby 1.9,
         # otherwise YAML dumps other string encodings as !binary
         if RUBY_VERSION.to_f >= 1.9
           @source_digests = encode_hash_as_utf8 @source_digests
