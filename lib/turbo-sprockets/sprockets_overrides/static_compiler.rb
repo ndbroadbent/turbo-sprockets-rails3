@@ -58,12 +58,11 @@ if defined?(Sprockets::StaticCompiler)
           end
         end
 
-        # Encode all keys and values as UTF-8 for Ruby 1.9, otherwise YAML stores them as !binary
+        # Encode all keys and values as UTF-8 for Ruby 1.9,
+        # otherwise YAML dumps other string encodings as !binary
         if RUBY_VERSION.to_f >= 1.9
-          utf8_sources, utf8_digests = {}, {}
-          @source_digests.each { |k, v| utf8_sources[k.encode("UTF-8")] = v.encode("UTF-8") }
-          @digest_files.each   { |k, v| utf8_digests[k.encode("UTF-8")] = v.encode("UTF-8") }
-          @source_digests, @digest_files = utf8_sources, utf8_digests
+          @source_digests = encode_hash_as_utf8 @source_digests
+          @digest_files   = encode_hash_as_utf8 @digest_files
         end
 
         if @manifest
@@ -77,6 +76,12 @@ if defined?(Sprockets::StaticCompiler)
 
         elapsed_time = ((Time.now.to_f - start_time) * 1000).to_i
         env.logger.debug "Processed #{'non-' unless @digest}digest assets in #{elapsed_time}ms"
+      end
+
+      private
+
+      def encode_hash_as_utf8(hash)
+        Hash[*hash.map {|k,v| [k.encode("UTF-8"), v.encode("UTF-8")] }.flatten]
       end
     end
   end
