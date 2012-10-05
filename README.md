@@ -31,8 +31,9 @@ Just drop the gem in your `Gemfile`:
 gem 'turbo-sprockets-rails3'
 ```
 
-Run `bundle`, and you're done!
+Warning: Don't add this gem to the `:assets` group. It must be available in the production environment, since it overrides the asset path helpers, and changes the manifest format.
 
+Run `bundle`, and you're done!
 
 Test it out by running `rake assets:precompile`. When it's finished, your `public/assets/manifest.yml` file should include a `:source_digests` hash for your assets.
 
