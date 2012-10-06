@@ -27,6 +27,9 @@ module Sprockets
       start_time = Time.now.to_f
 
       env.each_logical_path do |logical_path|
+        if File.basename(logical_path)[/[^\.]+/, 0] == 'index'
+          logical_path.sub!(/\/index\./, '.')
+        end
         next unless compile_path?(logical_path)
 
         digest_path      = @digest_files[logical_path]
