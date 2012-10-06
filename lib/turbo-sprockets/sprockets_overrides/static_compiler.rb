@@ -27,9 +27,6 @@ if defined?(Sprockets::StaticCompiler)
         start_time = Time.now.to_f
 
         env.each_logical_path do |logical_path|
-          if File.basename(logical_path)[/[^\.]+/, 0] == 'index'
-            logical_path.sub!(/\/index\./, '.')
-          end
           next unless compile_path?(logical_path)
 
           # Fetch asset without any processing or compression,
@@ -45,9 +42,15 @@ if defined?(Sprockets::StaticCompiler)
              !(current_digest_file && File.exists?("#{@target}/#{current_digest_file}"))
 
             if asset = env.find_asset(logical_path)
-              @digest_files[logical_path] = write_asset(asset)
-            end
+              digest_path = write_asset(asset)
+              @digest_files[asset.logical_path] = digest_path
 
+              # Add 'index' alias if file exists
+              aliased_path = aliased_path_for(asset.logical_path)
+              if File.exists? "#{@target}/#{aliased_path}"
+                @digest_files[aliased_path] = digest_path
+              end
+            end
           else
             # Set asset file from manifest.yml
             digest_file = @current_digest_files[logical_path]
@@ -82,6 +85,14 @@ if defined?(Sprockets::StaticCompiler)
 
       def encode_hash_as_utf8(hash)
         Hash[*hash.map {|k,v| [k.encode("UTF-8"), v.encode("UTF-8")] }.flatten]
+      end
+
+      def aliased_path_for(logical_path)
+        if File.basename(logical_path).start_with?('index')
+          logical_path.sub(/\/index([^\/]+)$/, '\1')
+        else
+          logical_path.sub(/\.([^\/]+)$/, '/index.\1')
+        end
       end
     end
   end
