@@ -1,9 +1,12 @@
 require "fileutils"
 
-# Clear all assets tasks from sprockets railtie
+# Clear all assets tasks from sprockets railtie,
+# but preserve any extra actions added via 'enhance'
+task_enhancements = {}
 Rake::Task.tasks.each do |task|
   if task.name.match '^assets:'
-    task.clear_prerequisites.clear_actions
+    task_enhancements[task.name] = task.actions[1..-1] if task.actions.size > 1
+    task.clear
   end
 end
 
@@ -80,7 +83,14 @@ namespace :assets do
 
     task :all => ["assets:cache:clean"] do
       internal_precompile
-      internal_precompile(false) if ::Rails.application.config.assets.digest
+      if ::Rails.application.config.assets.digest
+        internal_precompile(false)
+
+        # Other gems may add hooks to run after the 'assets:precompile:nondigest' task.
+        # Since we aren't running separate rake tasks anymore,
+        # we need to manually invoke those extra actions now.
+        Rake::Task["assets:precompile:nondigest"].actions[1..-1].each &:call
+      end
     end
 
     task :primary => ["assets:cache:clean"] do
@@ -118,5 +128,13 @@ namespace :assets do
       ::Rails.application.initialize!(:assets)
       Sprockets::Bootstrap.new(Rails.application).run
     end
+  end
+end
+
+
+# Append previous task enhancements to new Rake tasks.
+task_enhancements.each do |task_name, actions|
+  actions.each do |proc|
+    Rake::Task[task_name].enhance &proc
   end
 end
