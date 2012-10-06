@@ -86,10 +86,12 @@ namespace :assets do
       if ::Rails.application.config.assets.digest
         internal_precompile(false)
 
-        # Other gems may add hooks to run after the 'assets:precompile:nondigest' task.
+        # Other gems may want to add hooks to run after the 'assets:precompile:***' tasks.
         # Since we aren't running separate rake tasks anymore,
-        # we need to manually invoke those extra actions now.
-        Rake::Task["assets:precompile:nondigest"].actions[1..-1].each &:call
+        # we need to manually invoke the extra actions.
+        %w(primary nondigest).each do |asset_type|
+          Rake::Task["assets:precompile:#{asset_type}"].actions[1..-1].each &:call
+        end
       end
     end
 
