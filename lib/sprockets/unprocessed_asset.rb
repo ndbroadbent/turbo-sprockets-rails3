@@ -1,11 +1,15 @@
 module Sprockets
   class UnprocessedAsset < AssetWithDependencies
-    def replace_scss_imports
-      @source.gsub!(/^@import ["']([^"']+)["']/) do |match|
+    def replace_imports(template_with_leading_underscore = true)
+      @source.gsub!(/^@import ["']([^"']+)["'];?/) do |match|
         begin
-          template = "_#{$1}"
+          if template_with_leading_underscore
+            template = "_#{$1}"
+          else
+            template = $1
+          end
           pathname = @environment.resolve(template)
-          asset = UnprocessedAsset.new @environment, '_changeme2', pathname
+          asset = UnprocessedAsset.new @environment, template, pathname
           # Replace imported template with the unprocessed asset contents.
           asset.to_s
         rescue Sprockets::FileNotFound
@@ -13,6 +17,7 @@ module Sprockets
         end
       end
     end
+
 
     def initialize(environment, logical_path, pathname)
       super
@@ -27,9 +32,13 @@ module Sprockets
 
       @source = context.evaluate(pathname, :processors => processors)
 
-      # Manually include files that are @imported from SCSS
+      # Include SASS imports
       if defined?(Sass::Rails::ScssTemplate) && attributes.processors.include?(Sass::Rails::ScssTemplate)
-        replace_scss_imports
+        replace_imports(true)  # Template has leading underscore
+      end
+      # Include Less imports
+      if defined?(Less::Rails::LessTemplate) && attributes.processors.include?(Less::Rails::LessTemplate)
+        replace_imports(false)  # Template has no leading underscore
       end
 
       build_required_assets(environment, context,  :process => false)
