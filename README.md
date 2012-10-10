@@ -51,7 +51,7 @@ Fully compatible. Just don't use the experimental `AssetSync.config.manifest = t
 
 ### [wicked_pdf](https://github.com/mileszs/wicked_pdf)
 
-Some users have reported problems where the production server was attempting to compile assets. To fix this, you'll need to use the latest code on the master branch by adding the following line to your `Gemfile`:
+Some users have reported that their production server was attempting to compile assets. To solve this, you will need to use the latest code on the `wicked_pdf` master branch by adding the following line to your `Gemfile`:
 
 ```ruby
 gem 'wicked_pdf', :github => "mileszs/wicked_pdf"
