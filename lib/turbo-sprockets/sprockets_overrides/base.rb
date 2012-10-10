@@ -1,5 +1,4 @@
 require 'sprockets/base'
-require 'sprockets/unprocessed_asset'
 
 module Sprockets
   Base.class_eval do

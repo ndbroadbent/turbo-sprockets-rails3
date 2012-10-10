@@ -1,5 +1,4 @@
 require 'sprockets/processed_asset'
-require 'sprockets/asset_with_dependencies'
 
 module Sprockets
 
