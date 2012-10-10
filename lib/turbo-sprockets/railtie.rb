@@ -21,7 +21,8 @@ module TurboSprockets
 
       if File.exist?(manifest_path)
         manifest = YAML.load_file(manifest_path)
-        config.assets.digest_files   = manifest[:digest_files]   || {}
+        # Set both digest keys for backwards compatibility
+        config.assets.digests = config.assets.digest_files = manifest[:digest_files]   || {}
         config.assets.source_digests = manifest[:source_digests] || {}
       end
     end
