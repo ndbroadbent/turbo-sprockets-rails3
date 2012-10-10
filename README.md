@@ -48,6 +48,15 @@ Enjoy your lightning fast deploys!
 Fully compatible. Just don't use the experimental `AssetSync.config.manifest = true` configuration option until
 [my asset_sync patch](https://github.com/rumblelabs/asset_sync/pull/110) has been merged.
 
+
+### [wicked_pdf](https://github.com/mileszs/wicked_pdf)
+
+Some users have reported problems where the production server was attempting to compile assets. To fix this, you'll need to use the latest code on the master branch by adding the following line to your `Gemfile`:
+
+```ruby
+gem 'wicked_pdf', :github => "mileszs/wicked_pdf"
+```
+
 <hr/>
 
 Please let me know if you have any problems with other gems, and I will either fix it, or make a note of the problem here.
