@@ -82,16 +82,14 @@ namespace :assets do
     end
 
     task :all => ["assets:cache:clean"] do
+      # Other gems may want to add hooks to run after the 'assets:precompile:***' tasks.
+      # Since we aren't running separate rake tasks anymore, we manually invoke the extra actions.
       internal_precompile
+      Rake::Task["assets:precompile:primary"].actions[1..-1].each &:call
+
       if ::Rails.application.config.assets.digest
         internal_precompile(false)
-
-        # Other gems may want to add hooks to run after the 'assets:precompile:***' tasks.
-        # Since we aren't running separate rake tasks anymore,
-        # we need to manually invoke the extra actions.
-        %w(primary nondigest).each do |asset_type|
-          Rake::Task["assets:precompile:#{asset_type}"].actions[1..-1].each &:call
-        end
+        Rake::Task["assets:precompile:nondigest"].actions[1..-1].each &:call
       end
     end
 
