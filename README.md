@@ -51,7 +51,7 @@ Fully compatible. Just don't use the experimental `AssetSync.config.manifest = t
 
 ### [wicked_pdf](https://github.com/mileszs/wicked_pdf)
 
-Fully compatible. Until a version later than `0.7.9` is released, you will need to use the latest code on the `wicked_pdf` master branch by adding the following line to your `Gemfile`:
+Fully compatible. However, you will need to use the latest code on the `wicked_pdf` master branch until a version newer than `0.7.9` is released. Add the following line to your `Gemfile`:
 
 ```ruby
 gem 'wicked_pdf', :github => "mileszs/wicked_pdf"
