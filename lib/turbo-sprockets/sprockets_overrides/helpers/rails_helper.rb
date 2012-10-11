@@ -28,7 +28,7 @@ module Sprockets
             end
             return logical_path
           else
-            raise AssetNotPrecompiledError.new("#{logical_path} isn't precompiled")
+            raise AssetPaths::AssetNotPrecompiledError.new("#{logical_path} isn't precompiled")
           end
         end
       end
