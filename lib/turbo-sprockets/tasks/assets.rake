@@ -116,7 +116,8 @@ namespace :assets do
   end
 
   namespace :cache do
-    task :clean => ['tmp:create', "assets:environment"] do
+    task :clean => ["assets:environment"] do
+      FileUtils.mkdir_p(File.join(::Rails.root.to_s, *%w(tmp cache assets)))
       ::Rails.application.assets.cache.clear
     end
   end
