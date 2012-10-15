@@ -71,6 +71,12 @@ Please let me know if you have any problems with other gems, and I will either f
 
 `turbo-sprockets-rails3` should work out of the box with Capistrano.
 
+You may also like to take a look at my [Capistrano Pull Request](https://github.com/capistrano/capistrano/pull/281) that attempts to solve the problems of asset rollback and invalidation. You can try out this solution by adding the following to your Gemfile:
+
+```ruby
+gem "capistrano", :github => "ndbroadbent/capistrano", :branch => "assets_rollback_and_expiry"
+```
+
 ### Heroku
 
 You won't be able to do an 'incremental update' on heroku, since your `public/assets`
