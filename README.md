@@ -5,9 +5,6 @@
 * Speeds up your Rails 3 `rake assets:precompile` by only recompiling changed assets, based on a hash of their source files
 * Only compiles once to generate both fingerprinted and non-fingerprinted assets
 
-This is a backport of the work I've done for Rails 4.0.0, released as
-a gem for Rails 3.2.x. (See [sprockets-rails #21](https://github.com/rails/sprockets-rails/pull/21) and [sprockets #367](https://github.com/sstephenson/sprockets/pull/367) for the Rails 4 pull requests.)
-
 
 ### Disclaimer
 
