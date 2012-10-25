@@ -102,6 +102,40 @@ namespace :assets do
     end
   end
 
+  desc "Remove old assets that aren't referenced by manifest.yml"
+  task :clean_expired do
+    invoke_or_reboot_rake_task "assets:clean_expired:all"
+  end
+
+  namespace :clean_expired do
+    task :all do
+      # Remove assets that aren't referenced by manifest.yml,
+      # and are older than `config.assets.expire_after` (default 7 days).
+      config = ::Rails.application.config
+      expire_after = config.assets.expire_after || 7.days
+      public_asset_path = File.join(::Rails.public_path, config.assets.prefix)
+
+      # Also handle gzipped assets
+      known_assets = config.assets.digests.to_a.flatten.map do |asset|
+        [asset, "#{asset}.gz"]
+      end.flatten
+      known_assets += %w(manifest.yml sources_manifest.yml)
+
+      Dir.glob(File.join(public_asset_path, '**/*')).each do |asset|
+        next if File.directory?(asset)
+        logical_path = asset.sub("#{public_asset_path}/", '')
+
+        unless logical_path.in?(known_assets)
+          # Delete asset if older than expire_after seconds
+          if File.mtime(asset) < (Time.now - expire_after)
+            ::Rails.logger.debug "Removing expired asset: #{logical_path}"
+            FileUtils.rm_f asset
+          end
+        end
+      end
+    end
+  end
+
   desc "Remove compiled assets"
   task :clean do
     invoke_or_reboot_rake_task "assets:clean:all"
@@ -138,4 +172,9 @@ task_enhancements.each do |task_name, actions|
   actions.each do |proc|
     Rake::Task[task_name].enhance &proc
   end
+end
+
+# Clean expired assets after asset precompile, if CLEAN_EXPIRED_ASSETS is set
+Rake::Task["assets:precompile:all"].enhance do
+  Rake::Task["assets:clean_expired:all"].invoke if ENV['CLEAN_EXPIRED_ASSETS'].in? %w(true yes 1)
 end
