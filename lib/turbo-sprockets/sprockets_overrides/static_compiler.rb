@@ -45,6 +45,8 @@ if defined?(Sprockets::StaticCompiler)
 
               if asset = env.find_asset(logical_path)
                 @digests[logical_path] = write_asset(asset)
+                # Update current_digests with new hash, for future assets to reference
+                @current_digests[logical_path] = asset.digest_path
               end
 
             else
