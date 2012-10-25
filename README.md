@@ -22,13 +22,14 @@ This gem only supports Rails `3.2.0` or higher.
 
 ## Usage
 
-Just drop the gem in your `Gemfile`:
+Just drop the gem in your `Gemfile`, under the `:assets` group:
 
 ```ruby
-gem 'turbo-sprockets-rails3'
+group :assets do
+  ...
+  gem 'turbo-sprockets-rails3'
+end
 ```
-
-(The gem won't affect your production environment, so you can add it to the `:assets` group.)
 
 Run `bundle` to install the gem, and you're done!
 
