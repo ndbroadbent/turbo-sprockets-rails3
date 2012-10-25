@@ -1,7 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + "/sprockets_helpers_abstract_unit")
 require 'sprockets'
 require 'sprockets/helpers/rails_helper'
-require 'turbo-sprockets/sprockets_overrides/helpers/rails_helper'
 require 'mocha'
 
 class SprocketsHelperWithRoutesTest < ActionView::TestCase
