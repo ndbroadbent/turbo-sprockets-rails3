@@ -68,7 +68,8 @@ if defined?(Sprockets::StaticCompiler)
         end
 
         if @manifest
-          write_manifest(@digests, @source_digests)
+          write_manifest(@digests)
+          write_sources_manifest(@source_digests)
         end
 
         # Store digests in Rails config. (Important if non-digest is run after primary)
@@ -80,11 +81,8 @@ if defined?(Sprockets::StaticCompiler)
         env.logger.debug "Processed #{'non-' unless @digest}digest assets in #{elapsed_time}ms"
       end
 
-      def write_manifest(digests, source_digests)
+      def write_sources_manifest(source_digests)
         FileUtils.mkdir_p(@manifest_path)
-        File.open("#{@manifest_path}/manifest.yml", 'wb') do |f|
-          YAML.dump(digests, f)
-        end
         File.open("#{@manifest_path}/sources_manifest.yml", 'wb') do |f|
           YAML.dump(source_digests, f)
         end
