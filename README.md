@@ -28,7 +28,7 @@ Just drop the gem in your `Gemfile`:
 gem 'turbo-sprockets-rails3'
 ```
 
-Warning: Don't add this gem to the `:assets` group. It must be available in the production environment, since it overrides path helpers and alters the manifest format. This is a common cause of `**** isn't precompiled` errors in production.
+(The gem won't affect your production environment, so you can add it to the `:assets` group.)
 
 Run `bundle` to install the gem, and you're done!
 
