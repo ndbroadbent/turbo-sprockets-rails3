@@ -1,7 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + "/sprockets_helpers_abstract_unit")
 require 'sprockets'
 require 'sprockets/helpers/rails_helper'
-require 'turbo-sprockets/sprockets_overrides/helpers/rails_helper'
 require 'mocha'
 
 class SprocketsHelperTest < ActionView::TestCase
@@ -355,7 +354,7 @@ class SprocketsHelperTest < ActionView::TestCase
   end
 
   test "precedence of `config.digest = false` over manifest.yml asset digests" do
-    Rails.application.config.assets.digest_files = {'logo.png' => 'logo-d1g3st.png'}
+    Rails.application.config.assets.digests = {'logo.png' => 'logo-d1g3st.png'}
     @config.assets.digest = false
 
     assert_equal '/assets/logo.png',

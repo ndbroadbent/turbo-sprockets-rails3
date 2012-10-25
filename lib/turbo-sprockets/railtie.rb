@@ -13,18 +13,11 @@ module TurboSprockets
     initializer "turbo-sprockets.environment", :after => "sprockets.environment", :group => :all do |app|
       config = app.config
 
-      if config.assets.manifest
-        manifest_path = File.join(config.assets.manifest, "manifest.yml")
-      else
-        manifest_path = File.join(Rails.public_path, config.assets.prefix, "manifest.yml")
-      end
-
-      if File.exist?(manifest_path)
-        manifest = YAML.load_file(manifest_path)
-        # Set both digest keys for backwards compatibility
-        config.assets.digests = config.assets.digest_files = manifest[:digest_files]   || {}
-        config.assets.source_digests = manifest[:source_digests] || {}
-      end
+      manifest_dir = config.assets.manifest || File.join(Rails.public_path, config.assets.prefix)
+      digests_manifest = File.join(manifest_dir, "manifest.yml")
+      sources_manifest = File.join(manifest_dir, "sources_manifest.yml")
+      config.assets.digests        = (File.exist?(digests_manifest) && YAML.load_file(digests_manifest)) || {}
+      config.assets.source_digests = (File.exist?(sources_manifest) && YAML.load_file(sources_manifest)) || {}
     end
   end
 end

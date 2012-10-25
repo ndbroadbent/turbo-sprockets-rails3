@@ -17,9 +17,9 @@ if defined?(Sprockets::StaticCompiler)
         @zip_files = options.delete(:zip_files) || /\.(?:css|html|js|svg|txt|xml)$/
 
         @current_source_digests = options.fetch(:source_digests, {})
-        @current_digest_files   = options.fetch(:digest_files,   {})
+        @current_digests        = options.fetch(:digests,   {})
 
-        @digest_files   = {}
+        @digests        = {}
         @source_digests = {}
       end
 
@@ -38,19 +38,19 @@ if defined?(Sprockets::StaticCompiler)
             @source_digests[logical_path] = asset.digest
 
             # Recompile if digest has changed or compiled digest file is missing
-            current_digest_file = @current_digest_files[logical_path]
+            current_digest_file = @current_digests[logical_path]
 
             if @source_digests[logical_path] != @current_source_digests[logical_path] ||
                !(current_digest_file && File.exists?("#{@target}/#{current_digest_file}"))
 
               if asset = env.find_asset(logical_path)
-                @digest_files[logical_path] = write_asset(asset)
+                @digests[logical_path] = write_asset(asset)
               end
 
             else
               # Set asset file from manifest.yml
-              digest_file = @current_digest_files[logical_path]
-              @digest_files[logical_path] = digest_file
+              digest_file = @current_digests[logical_path]
+              @digests[logical_path] = digest_file
 
               env.logger.debug "Not compiling #{logical_path}, sources digest has not changed " <<
                                "(#{@source_digests[logical_path][0...7]})"
@@ -62,20 +62,30 @@ if defined?(Sprockets::StaticCompiler)
         # otherwise YAML dumps other string encodings as !binary
         if RUBY_VERSION.to_f >= 1.9
           @source_digests = encode_hash_as_utf8 @source_digests
-          @digest_files   = encode_hash_as_utf8 @digest_files
+          @digests        = encode_hash_as_utf8 @digests
         end
 
         if @manifest
-          write_manifest(:source_digests => @source_digests, :digest_files => @digest_files)
+          write_manifest(@digests, @source_digests)
         end
 
         # Store digests in Rails config. (Important if non-digest is run after primary)
         config = ::Rails.application.config
-        config.assets.digest_files   = @digest_files
+        config.assets.digests        = @digests
         config.assets.source_digests = @source_digests
 
         elapsed_time = ((Time.now.to_f - start_time) * 1000).to_i
         env.logger.debug "Processed #{'non-' unless @digest}digest assets in #{elapsed_time}ms"
+      end
+
+      def write_manifest(digests, source_digests)
+        FileUtils.mkdir_p(@manifest_path)
+        File.open("#{@manifest_path}/manifest.yml", 'wb') do |f|
+          YAML.dump(digests, f)
+        end
+        File.open("#{@manifest_path}/sources_manifest.yml", 'wb') do |f|
+          YAML.dump(source_digests, f)
+        end
       end
 
       private

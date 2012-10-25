@@ -32,7 +32,7 @@ Warning: Don't add this gem to the `:assets` group. It must be available in the 
 
 Run `bundle` to install the gem, and you're done!
 
-Test it out by running `rake assets:precompile`. When it's finished, your `public/assets/manifest.yml` file should include a `:source_digests` hash for your assets.
+Test it out by running `rake assets:precompile`. When it's finished, you should see a new file at `public/assets/sources_manifest.yml`, which includes the source fingerprints for your assets.
 
 Go on, run `rake assets:precompile` again, and it should be a whole lot faster than before.
 
@@ -42,13 +42,7 @@ Enjoy your lightning fast deploys!
 
 ### [asset_sync](https://github.com/rumblelabs/asset_sync)
 
-Fully compatible. Just don't use the experimental `AssetSync.config.manifest = true` configuration option until
-[my asset_sync patch](https://github.com/rumblelabs/asset_sync/pull/110) has been merged. Alternatively, you can use my patched `asset_sync` with the following line in your `Gemfile`:
-
-```ruby
-gem "asset_sync", :github => "ndbroadbent/asset_sync", :branch => "new_manifest_support"
-```
-
+Fully compatible.
 
 ### [wicked_pdf](https://github.com/mileszs/wicked_pdf)
 

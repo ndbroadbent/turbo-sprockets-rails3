@@ -11,10 +11,10 @@ module Sprockets
       @env = env
       @target = target
       @paths = paths
-      @digest_files = options.fetch(:digest_files, {})
+      @digests = options.fetch(:digests, {})
 
-      # Parse digests from digest_files hash
-      @asset_digests = Hash[*@digest_files.map {|file, digest_file|
+      # Parse digests from digests hash
+      @asset_digests = Hash[*@digests.map {|file, digest_file|
         [file, digest_file[DIGEST_REGEX, 1]]
       }.flatten]
     end
@@ -32,7 +32,7 @@ module Sprockets
         end
         next unless compile_path?(logical_path)
 
-        if digest_path = @digest_files[logical_path]
+        if digest_path = @digests[logical_path]
           abs_digest_path  = "#{@target}/#{digest_path}"
           abs_logical_path = "#{@target}/#{logical_path}"
 

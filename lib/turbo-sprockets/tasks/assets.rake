@@ -54,8 +54,8 @@ namespace :assets do
       config = Rails.application.config
       config.assets.compile = true
       config.assets.clean_after_precompile = false if config.assets.clean_after_precompile.nil?
-      config.assets.digest  = digest unless digest.nil?
-      config.assets.digest_files   ||= {}
+      config.assets.digest = digest unless digest.nil?
+      config.assets.digests        ||= {}
       config.assets.source_digests ||= {}
 
       env    = Rails.application.assets
@@ -65,16 +65,16 @@ namespace :assets do
       # present, then generate non-digest assets from existing assets.
       # It is assumed that `assets:precompile:nondigest` won't be run manually
       # if assets have been previously compiled with digests.
-      if !config.assets.digest && config.assets.digest_files.any?
+      if !config.assets.digest && config.assets.digests.any?
         generator = Sprockets::StaticNonDigestGenerator.new(env, target, config.assets.precompile,
-          :digest_files => config.assets.digest_files)
+          :digests => config.assets.digests)
         generator.generate
       else
         compiler = Sprockets::StaticCompiler.new(env, target, config.assets.precompile,
           :digest         => config.assets.digest,
           :manifest       => digest.nil?,
           :manifest_path  => config.assets.manifest,
-          :digest_files   => config.assets.digest_files,
+          :digests        => config.assets.digests,
           :source_digests => config.assets.source_digests
         )
         compiler.compile
