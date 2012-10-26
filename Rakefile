@@ -2,6 +2,9 @@
 require 'rake/testtask'
 ENV["TEST_CORES"] = "1"
 
+require 'bundler'
+Bundler::GemHelper.install_tasks
+
 namespace :test do
   task :isolated do
     Dir["test/assets*_test.rb"].each do |file|
