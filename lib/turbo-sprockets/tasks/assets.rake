@@ -35,6 +35,15 @@ namespace :assets do
     end
   end
 
+  # Returns an array of assets recognized by config.assets.digests,
+  # including gzipped assets and manifests
+  def known_assets
+    assets = Rails.application.config.assets.digests.to_a.flatten.map do |asset|
+      [asset, "#{asset}.gz"]
+    end.flatten
+    assets + %w(manifest.yml sources_manifest.yml)
+  end
+
   desc "Compile all the assets named in config.assets.precompile"
   task :precompile do
     invoke_or_reboot_rake_task "assets:precompile:all"
@@ -61,14 +70,14 @@ namespace :assets do
       env    = Rails.application.assets
       target = File.join(::Rails.public_path, config.assets.prefix)
 
-      # Create `public/assets/expire_assets_after.yml`, containing the timestamp of the previous manifest.yml
-      # (Only for first run)
+      # Before first compile, set the mtime of all current assets to current time.
+      # This time reflects the last time the assets were being used.
       if digest.nil?
-        manifest_path = config.assets.manifest || target
-        manifest_file = File.join(manifest_path, 'manifest.yml')
-        if File.exist?(manifest_file)
-          File.open(File.join(target, 'expire_assets_after.yml'), 'w') do |f|
-            f.puts YAML.dump(:expire_assets_after => File.mtime(manifest_file))
+        ::Rails.logger.debug "Updating mtimes for current assets..."
+        known_assets.each do |asset|
+          full_path = File.join(target, asset)
+          if File.exist?(full_path)
+            File.utime(Time.now, Time.now, full_path)
           end
         end
       end
@@ -119,39 +128,26 @@ namespace :assets do
     invoke_or_reboot_rake_task "assets:clean_expired:all"
   end
 
+  # Remove assets that haven't been deployed since `config.assets.expire_after` (default 7 days).
+  # The precompile task updates the mtime of the current assets before compiling,
+  # which indicates when they were last in use.
+  #
+  # The current assets are ignored, which is faster than the alternative of
+  # setting their mtimes only to check them again.
   namespace :clean_expired do
     task :all => ["assets:environment"] do
-      # Remove assets that aren't referenced by manifest.yml,
-      # and are older than `config.assets.expire_after` (default 7 days),
-      # counting from the **previous** compile.
       config = ::Rails.application.config
       expire_after = config.assets.expire_after || 7.days
       public_asset_path = File.join(::Rails.public_path, config.assets.prefix)
-
-      # Also handle gzipped assets
-      known_assets = config.assets.digests.to_a.flatten.map do |asset|
-        [asset, "#{asset}.gz"]
-      end.flatten
-      known_assets += %w(manifest.yml sources_manifest.yml)
+      @known_assets = known_assets
 
       Dir.glob(File.join(public_asset_path, '**/*')).each do |asset|
         next if File.directory?(asset)
         logical_path = asset.sub("#{public_asset_path}/", '')
 
-        unless logical_path.in?(known_assets)
-          # If 'expire_assets_after.yml' file exists, use that as the base time for expire_after
-          # Otherwise, use Time.now
-          expire_after_base_time = Time.now
-
-          expire_after_file = File.join(::Rails.public_path, config.assets.prefix, 'expire_assets_after.yml')
-          if File.exist?(expire_after_file)
-            if time = YAML.load_file(expire_after_file)[:expire_assets_after]
-              expire_after_base_time = time
-            end
-          end
-
-          # Delete asset if older than expire_after seconds
-          if File.mtime(asset) < (expire_after_base_time - expire_after)
+        unless logical_path.in?(@known_assets)
+          # Delete asset if not used for more than expire_after seconds
+          if File.mtime(asset) < (Time.now - expire_after)
             ::Rails.logger.debug "Removing expired asset: #{logical_path}"
             FileUtils.rm_f asset
           end
