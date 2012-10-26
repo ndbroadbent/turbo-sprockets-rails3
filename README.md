@@ -86,13 +86,25 @@ gem "capistrano", :github => "ndbroadbent/capistrano", :branch => "assets_rollba
 
 ### Heroku
 
-You won't be able to do an 'incremental update' on heroku, since your `public/assets`
-folder will be empty at the start of each push. However, this gem can still cut your
-precompile time in half, since it only needs to compile assets once.
+I have created a Heroku Buildpack for `turbo-sprockets-rails3` that keeps your assets cached between deploys, so you only need to recompile changed assets. It will automatically expire old assets that are no longer referenced by `manifest.yml` after 7 days, so your `public/assets` folder won't grow out of control.
 
-If you want to make the most of `turbo-sprockets-rails3`, you can run `assets:precompile` on your local machine and commit the compiled assets. When you push compiled assets to Heroku, it will automatically skip the `assets:precompile` task.
+To create a new application on Heroku using this buildpack, you can run:
 
-I've automated this process in a Rake task for my own projects. My task creates a deployment repo at `tmp/heroku_deploy` so that you can keep working while deploying, and it also rebases and amends the assets commit to keep your repo's history from growing out of control. You can find the deploy task in a gist at https://gist.github.com/3802355. Save this file to `lib/tasks/deploy.rake`, and make sure you have added a `heroku` remote to your repo. You will now be able to run `rake deploy` to deploy your app to Heroku.
+```bash
+heroku create --buildpack https://github.com/ndbroadbent/heroku-buildpack-turbo-sprockets.git
+```
+
+To add the buildpack to an existing app, you can run:
+
+```bash
+heroku config:add BUILDPACK_URL=https://github.com/ndbroadbent/heroku-buildpack-turbo-sprockets.git
+```
+
+#### Compiling Assets on Your Local Machine
+
+You can also compile assets on your local machine, and commit the compiled assets. You might want to do this if your local machine is a lot faster than the Heroku VM, or if you also want to generate other files, such as static pages. When you push compiled assets to Heroku, it will automatically skip the `assets:precompile` task.
+
+I've automated this process in a Rake task for my own projects. The task creates a deployment repo at `tmp/heroku_deploy` so that you can keep working while deploying, and it also rebases and amends the assets commit to keep your repo's history from growing out of control. You can find the deploy task in a gist at https://gist.github.com/3802355. Save this file to `lib/tasks/deploy.rake`, and make sure you have added a `heroku` remote to your repo. You will now be able to run `rake deploy` to deploy your app to Heroku.
 
 ## Debugging
 
