@@ -43,9 +43,11 @@ Enjoy your lightning fast deploys!
 ## Removing Expired Assets
 
 `turbo-sprockets-rails3` can now remove expired assets after each compile. If the environment variable `CLEAN_EXPIRED_ASSETS` is set to `true`, the `assets:clean_expired` task will be run after `assets:precompile`.
-An asset will be deleted if it is no longer referenced by `manifest.yml`, and is older than 7 days (by default).
+An asset will be deleted if it is no longer referenced by `manifest.yml`, and is more than 7 days (default) older than the **previous** compiled assets.
 
-To expire old assets after precompile, you should compile assets by running `CLEAN_EXPIRED_ASSETS=true rake assets:precompile`. Alternatively, you could run `rake assets:precompile assets:clean_expired`.
+Before the `assets:precompile` task runs, it stores the modification time of the current `manifest.yml` in a file called `expire_assets_after.yml`. When the `assets:clean_expired` task runs, it looks up the time in `expire_assets_after.yml`, and won't expire any assets that were created more recently than that time.
+
+To expire old assets after precompile, you should compile assets by running `CLEAN_EXPIRED_ASSETS=true rake assets:precompile`. Alternatively, you can run `rake assets:precompile assets:clean_expired`.
 
 You can configure the expiry time by setting `config.assets.expire_after` in `config/environments/production.rb`.
 An expiry time of 2 weeks could be configured with the following code:
@@ -86,7 +88,7 @@ gem "capistrano", :github => "ndbroadbent/capistrano", :branch => "assets_rollba
 
 ### Heroku
 
-I have created a Heroku Buildpack for `turbo-sprockets-rails3` that keeps your assets cached between deploys, so you only need to recompile changed assets. It will automatically expire old assets that are no longer referenced by `manifest.yml` after 7 days, so your `public/assets` folder won't grow out of control.
+I've created a Heroku Buildpack for `turbo-sprockets-rails3` that keeps your assets cached between deploys, so you only need to recompile changed assets. It will automatically expire old assets that are no longer referenced by `manifest.yml` after 7 days, so your `public/assets` folder won't grow out of control.
 
 To create a new application on Heroku using this buildpack, you can run:
 

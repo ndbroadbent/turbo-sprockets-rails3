@@ -61,6 +61,18 @@ namespace :assets do
       env    = Rails.application.assets
       target = File.join(::Rails.public_path, config.assets.prefix)
 
+      # Create `public/assets/expire_assets_after.yml`, containing the timestamp of the previous manifest.yml
+      # (Only for first run)
+      if digest.nil?
+        manifest_path = config.assets.manifest || target
+        manifest_file = File.join(manifest_path, 'manifest.yml')
+        if File.exist?(manifest_file)
+          File.open(File.join(target, 'expire_assets_after.yml'), 'w') do |f|
+            f.puts YAML.dump(:expire_assets_after => File.mtime(manifest_file))
+          end
+        end
+      end
+
       # If processing non-digest assets, and compiled digest files are
       # present, then generate non-digest assets from existing assets.
       # It is assumed that `assets:precompile:nondigest` won't be run manually
@@ -108,9 +120,10 @@ namespace :assets do
   end
 
   namespace :clean_expired do
-    task :all do
+    task :all => ["assets:environment"] do
       # Remove assets that aren't referenced by manifest.yml,
-      # and are older than `config.assets.expire_after` (default 7 days).
+      # and are older than `config.assets.expire_after` (default 7 days),
+      # counting from the **previous** compile.
       config = ::Rails.application.config
       expire_after = config.assets.expire_after || 7.days
       public_asset_path = File.join(::Rails.public_path, config.assets.prefix)
@@ -126,8 +139,19 @@ namespace :assets do
         logical_path = asset.sub("#{public_asset_path}/", '')
 
         unless logical_path.in?(known_assets)
+          # If 'expire_assets_after.yml' file exists, use that as the base time for expire_after
+          # Otherwise, use Time.now
+          expire_after_base_time = Time.now
+
+          expire_after_file = File.join(::Rails.public_path, config.assets.prefix, 'expire_assets_after.yml')
+          if File.exist?(expire_after_file)
+            if time = YAML.load_file(expire_after_file)[:expire_assets_after]
+              expire_after_base_time = time
+            end
+          end
+
           # Delete asset if older than expire_after seconds
-          if File.mtime(asset) < (Time.now - expire_after)
+          if File.mtime(asset) < (expire_after_base_time - expire_after)
             ::Rails.logger.debug "Removing expired asset: #{logical_path}"
             FileUtils.rm_f asset
           end
