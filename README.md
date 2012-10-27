@@ -43,9 +43,7 @@ Enjoy your lightning fast deploys!
 ## Removing Expired Assets
 
 `turbo-sprockets-rails3` can now remove expired assets after each compile. If the environment variable `CLEAN_EXPIRED_ASSETS` is set to `true`, the `assets:clean_expired` task will be run after `assets:precompile`.
-An asset will be deleted if it is no longer referenced by `manifest.yml`, and is more than 7 days (default) older than the **previous** compiled assets.
-
-Before the `assets:precompile` task runs, it stores the modification time of the current `manifest.yml` in a file called `expire_assets_after.yml`. When the `assets:clean_expired` task runs, it looks up the time in `expire_assets_after.yml`, and won't expire any assets that were created on or after than that time.
+An asset will be deleted if it is no longer referenced by `manifest.yml`, and hasn't been actively deployed for more than 7 days (default).
 
 To expire old assets after precompile, you should compile assets by running `CLEAN_EXPIRED_ASSETS=true rake assets:precompile`. Alternatively, you can run `rake assets:precompile assets:clean_expired`.
 
