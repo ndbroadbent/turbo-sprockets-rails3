@@ -18,6 +18,9 @@ module TurboSprockets
       sources_manifest = File.join(manifest_dir, "sources_manifest.yml")
       config.assets.digests        = (File.exist?(digests_manifest) && YAML.load_file(digests_manifest)) || {}
       config.assets.source_digests = (File.exist?(sources_manifest) && YAML.load_file(sources_manifest)) || {}
+
+      # Clear digests if loading previous manifest format
+      config.assets.digests = {} if config.assets.digests[:digest_files]
     end
   end
 end
