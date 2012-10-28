@@ -35,15 +35,6 @@ namespace :assets do
     end
   end
 
-  # Returns an array of assets recognized by config.assets.digests,
-  # including gzipped assets and manifests
-  def known_assets
-    assets = Rails.application.config.assets.digests.to_a.flatten.map do |asset|
-      [asset, "#{asset}.gz"]
-    end.flatten
-    assets + %w(manifest.yml sources_manifest.yml)
-  end
-
   desc "Compile all the assets named in config.assets.precompile"
   task :precompile do
     invoke_or_reboot_rake_task "assets:precompile:all"
@@ -69,18 +60,6 @@ namespace :assets do
 
       env    = Rails.application.assets
       target = File.join(::Rails.public_path, config.assets.prefix)
-
-      # Before first compile, set the mtime of all current assets to current time.
-      # This time reflects the last time the assets were being used.
-      if digest.nil?
-        ::Rails.logger.debug "Updating mtimes for current assets..."
-        known_assets.each do |asset|
-          full_path = File.join(target, asset)
-          if File.exist?(full_path)
-            File.utime(Time.now, Time.now, full_path)
-          end
-        end
-      end
 
       # If processing non-digest assets, and compiled digest files are
       # present, then generate non-digest assets from existing assets.
@@ -128,29 +107,26 @@ namespace :assets do
     invoke_or_reboot_rake_task "assets:clean_expired:all"
   end
 
-  # Remove assets that haven't been deployed since `config.assets.expire_after` (default 7 days).
-  # The precompile task updates the mtime of the current assets before compiling,
-  # which indicates when they were last in use.
-  #
-  # The current assets are ignored, which is faster than the alternative of
-  # setting their mtimes only to check them again.
+  # Remove assets that aren't referenced by manifest.yml
   namespace :clean_expired do
     task :all => ["assets:environment"] do
       config = ::Rails.application.config
-      expire_after = config.assets.expire_after || 7.days
       public_asset_path = File.join(::Rails.public_path, config.assets.prefix)
-      @known_assets = known_assets
+
+      # Build an array of assets recognized by config.assets.digests,
+      # including gzipped assets and manifests
+      known_assets = Rails.application.config.assets.digests.to_a.flatten.map do |asset|
+        [asset, "#{asset}.gz"]
+      end.flatten
+      known_assets + %w(manifest.yml sources_manifest.yml)
 
       Dir.glob(File.join(public_asset_path, '**/*')).each do |asset|
         next if File.directory?(asset)
         logical_path = asset.sub("#{public_asset_path}/", '')
-
-        unless logical_path.in?(@known_assets)
-          # Delete asset if not used for more than expire_after seconds
-          if File.mtime(asset) < (Time.now - expire_after)
-            ::Rails.logger.debug "Removing expired asset: #{logical_path}"
-            FileUtils.rm_f asset
-          end
+        # Delete asset if not found in known_assets
+        unless logical_path.in?(known_assets)
+          ::Rails.logger.debug "Removing unreferenced asset: #{logical_path}"
+          FileUtils.rm_f asset
         end
       end
     end
