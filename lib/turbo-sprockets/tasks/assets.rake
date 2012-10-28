@@ -128,7 +128,8 @@ namespace :assets do
     invoke_or_reboot_rake_task "assets:clean_expired:all"
   end
 
-  # Remove assets that haven't been deployed since `config.assets.expire_after` (default 7 days).
+  # Remove assets that haven't been deployed since `config.assets.expire_after` (default 1 day).
+  # This provides a buffer between deploys, so that older assets can still be requested.
   # The precompile task updates the mtime of the current assets before compiling,
   # which indicates when they were last in use.
   #
