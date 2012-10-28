@@ -118,7 +118,7 @@ namespace :assets do
       known_assets = Rails.application.config.assets.digests.to_a.flatten.map do |asset|
         [asset, "#{asset}.gz"]
       end.flatten
-      known_assets + %w(manifest.yml sources_manifest.yml)
+      known_assets += %w(manifest.yml sources_manifest.yml)
 
       Dir.glob(File.join(public_asset_path, '**/*')).each do |asset|
         next if File.directory?(asset)
