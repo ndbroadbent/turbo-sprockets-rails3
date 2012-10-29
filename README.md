@@ -15,7 +15,7 @@ However, please do test it out on your local machine before deploying to a produ
 
 ### Ruby
 
-All versions of Ruby that are supported by Rails `3.2.x`, including `1.9.3`, `1.9.2`, `1.8.7` and REE.
+All versions of Ruby are supported by Rails `3.2.x`, including `1.9.3`, `1.9.2`, `1.8.7` and REE.
 
 ### Rails
 
