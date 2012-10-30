@@ -26,37 +26,33 @@ if defined?(Sprockets::StaticCompiler)
       def compile
         start_time = Time.now.to_f
 
-        env.each_logical_path do |logical_path|
-          if File.basename(logical_path)[/[^\.]+/, 0] == 'index'
-            logical_path.sub!(/\/index\./, '.')
-          end
-          next unless compile_path?(logical_path)
-
+        env.each_logical_path(paths) do |logical_path|
           # Fetch asset without any processing or compression,
           # to calculate a digest of the concatenated source files
-          if asset = env.find_asset(logical_path, :process => false)
-            @source_digests[logical_path] = asset.digest
+          next unless asset = env.find_asset(logical_path, :process => false)
+          @source_digests[logical_path] = asset.digest
 
-            # Recompile if digest has changed or compiled digest file is missing
-            current_digest_file = @current_digests[logical_path]
+          # Recompile if digest has changed or compiled digest file is missing
+          current_digest_file = @current_digests[logical_path]
 
-            if @source_digests[logical_path] != @current_source_digests[logical_path] ||
-               !(current_digest_file && File.exists?("#{@target}/#{current_digest_file}"))
+          if @source_digests[logical_path] != @current_source_digests[logical_path] ||
+             !(current_digest_file && File.exists?("#{@target}/#{current_digest_file}"))
 
-              if asset = env.find_asset(logical_path)
-                @digests[logical_path] = write_asset(asset)
-                # Update current_digests with new hash, for future assets to reference
-                @current_digests[logical_path] = asset.digest_path
-              end
-
-            else
-              # Set asset file from manifest.yml
-              digest_file = @current_digests[logical_path]
-              @digests[logical_path] = digest_file
-
-              env.logger.debug "Not compiling #{logical_path}, sources digest has not changed " <<
-                               "(#{@source_digests[logical_path][0...7]})"
+            if asset = env.find_asset(logical_path)
+              digest_path = write_asset(asset)
+              @digests[asset.logical_path] = digest_path
+              @digests[aliased_path_for(asset.logical_path)] = digest_path
+              # Update current_digests with new hash, for future assets to reference
+              @current_digests[asset.logical_path] = asset.digest_path
             end
+          else
+            # Set asset file from manifest.yml
+            digest_path = @current_digests[logical_path]
+            @digests[logical_path] = digest_path
+            @digests[aliased_path_for(logical_path)] = digest_path
+
+            env.logger.debug "Not compiling #{logical_path}, sources digest has not changed " <<
+                             "(#{@source_digests[logical_path][0...7]})"
           end
         end
 

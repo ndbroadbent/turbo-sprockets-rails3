@@ -15,5 +15,5 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/**/*"]
 
   s.add_runtime_dependency "sprockets", ">= 2.0.0"
-  s.add_runtime_dependency "railties",  ">= 3.1.0", '< 3.2.9'
+  s.add_runtime_dependency "railties",  "> 3.2.8", '< 4.0.0'
 end
