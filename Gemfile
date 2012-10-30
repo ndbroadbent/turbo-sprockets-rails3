@@ -3,7 +3,7 @@ source "http://rubygems.org"
 # Specify your gem's dependencies in sprockets-rails.gemspec
 gemspec
 
-gem 'rails', '3.2.8'
+gem 'rails', '3.2.9.rc1'
 gem "jquery-rails"
 
 gem "uglifier", :require => false
