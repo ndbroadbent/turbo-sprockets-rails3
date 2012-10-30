@@ -11,15 +11,6 @@
 `turbo-sprockets-rails3` can now be considered relatively stable. A lot of compatibility issues and bugs have been solved, so you shouldn't run into any problems.
 However, please do test it out on your local machine before deploying to a production site, and open an issue on GitHub if you have any problems. By using this software you agree to the terms and conditions in the [MIT license](https://github.com/ndbroadbent/turbo-sprockets-rails3/blob/master/MIT-LICENSE).
 
-## Supported Versions
-
-### Ruby
-
-All versions of Ruby are supported by Rails `3.2.x`, including `1.9.3`, `1.9.2`, `1.8.7` and REE.
-
-### Rails
-
-This gem only supports Rails `3.2.0` or higher.
 
 ## Usage
 
