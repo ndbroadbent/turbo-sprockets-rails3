@@ -1,3 +1,4 @@
+require 'sprockets'
 require 'sprockets/base'
 
 module Sprockets
