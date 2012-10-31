@@ -30,7 +30,9 @@ module Sprockets
 
     def cache_key_for(path, options)
       options[:process] = true unless options.key?(:process)
-      "#{path}:#{options[:bundle] ? '1' : '0'}:#{options[:process] ? '1' : '0'}"
+      key = "#{path}:#{options[:bundle] ? '1' : '0'}"
+      key << ":0" unless options[:process]
+      key
     end
   end
 end
