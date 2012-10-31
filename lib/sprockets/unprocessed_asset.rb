@@ -18,6 +18,7 @@ module Sprockets
       if @source.include?("@import")
         # Process Sass and Less files, since @import is too tricky to handle properly.
         allowed_engines << Sass::Rails::ScssTemplate if defined?(Sass::Rails::ScssTemplate)
+        allowed_engines << Sass::Rails::SassTemplate if defined?(Sass::Rails::SassTemplate)
         allowed_engines << Less::Rails::LessTemplate if defined?(Less::Rails::LessTemplate)
         processors = attributes.processors - (attributes.engines - allowed_engines)
         @source = context.evaluate(pathname, :processors => processors)
