@@ -44,6 +44,14 @@ An expiry time of 2 weeks could be configured with the following code:
 config.assets.expire_after 2.weeks
 ```
 
+## Versioning
+
+The gem needs to support multiple changes to Rails and sprockets, so the following versioning is used:
+
+* Rails 3.2.0 to 3.2.8 uses `turbo-sprockets-rails3` `0.2.x`
+* Rails 3.2.9 and higher uses `turbo-sprockets-rails3` `0.3.x`
+
+
 ## Compatibility
 
 ### [asset_sync](https://github.com/rumblelabs/asset_sync)
