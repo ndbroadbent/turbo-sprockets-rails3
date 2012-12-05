@@ -77,7 +77,9 @@ namespace :assets do
         known_assets.each do |asset|
           full_path = File.join(target, asset)
           if File.exist?(full_path)
-            File.utime(Time.now, Time.now, full_path)
+            # File.utime raises 'Operation not permitted' unless user is owner of file.
+            # Non-owners have permission to update mtime to the current time using 'touch'.
+            `touch #{full_path}`
           end
         end
       end
