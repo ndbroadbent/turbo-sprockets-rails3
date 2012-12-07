@@ -79,7 +79,7 @@ namespace :assets do
           if File.exist?(full_path)
             # File.utime raises 'Operation not permitted' unless user is owner of file.
             # Non-owners have permission to update mtime to the current time using 'touch'.
-            `touch #{full_path}`
+            `touch "#{full_path}"`
           end
         end
       end
