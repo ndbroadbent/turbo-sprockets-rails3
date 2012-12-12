@@ -60,10 +60,10 @@ Fully compatible.
 
 ### [wicked_pdf](https://github.com/mileszs/wicked_pdf)
 
-Fully compatible. However, you will need to use the latest code on the `wicked_pdf` master branch until a version newer than `0.7.9` is released. Add the following line to your `Gemfile`:
+Fully compatible starting from version `0.8.0`.
 
 ```ruby
-gem 'wicked_pdf', :github => "mileszs/wicked_pdf"
+gem 'wicked_pdf', '>= 0.8.0'
 ```
 
 <hr/>
