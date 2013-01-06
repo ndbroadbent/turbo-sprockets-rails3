@@ -1,4 +1,5 @@
 require "fileutils"
+require 'shellwords'
 
 # Clear all assets tasks from sprockets railtie,
 # but preserve any extra actions added via 'enhance'
@@ -74,13 +75,11 @@ namespace :assets do
       # This time reflects the last time the assets were being used.
       if digest.nil?
         ::Rails.logger.debug "Updating mtimes for current assets..."
-        known_assets.each do |asset|
-          full_path = File.join(target, asset)
-          if File.exist?(full_path)
-            # File.utime raises 'Operation not permitted' unless user is owner of file.
-            # Non-owners have permission to update mtime to the current time using 'touch'.
-            `touch "#{full_path}"`
-          end
+        paths = known_assets.map { |asset| File.join(target, asset) }
+        paths.each_slice(1000) do |slice|
+          # File.utime raises 'Operation not permitted' unless user is owner of file.
+          # Non-owners have permission to update mtime to the current time using 'touch'.
+          `touch -c #{slice.shelljoin}`
         end
       end
 
