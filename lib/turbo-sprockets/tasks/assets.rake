@@ -76,7 +76,7 @@ namespace :assets do
       if digest.nil?
         ::Rails.logger.debug "Updating mtimes for current assets..."
         paths = known_assets.map { |asset| File.join(target, asset) }
-        paths.each_slice(1000) do |slice|
+        paths.each_slice(100) do |slice|
           # File.utime raises 'Operation not permitted' unless user is owner of file.
           # Non-owners have permission to update mtime to the current time using 'touch'.
           `touch -c #{slice.shelljoin}`
