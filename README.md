@@ -74,14 +74,7 @@ Please let me know if you have any problems with other gems, and I will either f
 
 ### Capistrano
 
-`turbo-sprockets-rails3` should work out of the box with the latest Capistrano on the `master` branch, which now supports asset rollback and automatic expiry (implemented [here](https://github.com/capistrano/capistrano/pull/281)).
-
-Until they release a new version of the gem, add the following line to your `Gemfile`:
-
-
-```ruby
-gem 'capistrano', :github => 'capistrano/capistrano'
-```
+`turbo-sprockets-rails3` should work out of the box with the latest version of Capistrano.
 
 ### Heroku
 
