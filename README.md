@@ -33,7 +33,7 @@ Enjoy your lightning fast deploys!
 
 ## Removing Expired Assets
 
-`turbo-sprockets-rails3` provides a Rake task called `assets:clean_expired`. You can run this task after `assets:precompile` to remove outdated assets.
+`turbo-sprockets-rails3` provides a Rake task called `assets:clean_expired`. You can run this task after `assets:precompile` to remove outdated assets. To automatically run this `assets:clean_expired` task after `assets:precompile`, you can set the `CLEAN_EXPIRED_ASSETS` environment variable to `true` (`CLEAN_EXPIRED_ASSETS=true rake assets:precompile`).
 
 An asset will be deleted if it is no longer referenced by `manifest.yml`, and hasn't been actively deployed for more than a day (default).
 

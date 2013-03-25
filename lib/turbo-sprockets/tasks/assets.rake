@@ -196,3 +196,8 @@ task_enhancements.each do |task_name, actions|
     Rake::Task[task_name].enhance &proc
   end
 end
+
+# Clean expired assets after asset precompile, if CLEAN_EXPIRED_ASSETS is set
+Rake::Task["assets:precompile:all"].enhance do
+  Rake::Task["assets:clean_expired:all"].invoke if ENV['CLEAN_EXPIRED_ASSETS'].in? %w(true yes 1)
+end
