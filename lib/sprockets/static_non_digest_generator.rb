@@ -36,10 +36,10 @@ module Sprockets
           abs_digest_path  = "#{@target}/#{digest_path}"
           abs_logical_path = "#{@target}/#{logical_path}"
 
-          mtime = File.mtime(abs_digest_path)
-
           # Remove known digests from css & js
           if abs_digest_path.match(/\.(?:js|css)$/)
+            mtime = File.mtime(abs_digest_path)
+
             asset_body = File.read(abs_digest_path)
 
             # Find all hashes in the asset body with a leading '-'
@@ -68,7 +68,7 @@ module Sprockets
           else
             # Otherwise, treat file as binary and copy it.
             # Ignore paths that have no digests, such as READMEs
-            unless abs_digest_path == abs_logical_path
+            unless !File.exist?(abs_digest_path) || abs_digest_path == abs_logical_path
               FileUtils.cp_r abs_digest_path, abs_logical_path, :remove_destination => true
               env.logger.debug "Copied binary asset to #{logical_path}"
 
