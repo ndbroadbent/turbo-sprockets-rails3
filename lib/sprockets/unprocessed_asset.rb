@@ -6,11 +6,10 @@ module Sprockets
       @environment = environment
       context = environment.context_class.new(environment, logical_path, pathname)
       attributes = environment.attributes_for(pathname)
-      preprocessors = environment.preprocessors(content_type)
 
-      # Remove all postprocessors and engines except ERB to return unprocessed source file
+      # Remove all engine processors except ERB to return unprocessed source file
       allowed_engines = [Tilt::ERBTemplate]
-      processors = preprocessors + (attributes.engines & allowed_engines)
+      processors = attributes.processors - (attributes.engines - allowed_engines)
 
       @source = context.evaluate(pathname, :processors => processors)
 
@@ -21,7 +20,7 @@ module Sprockets
         allowed_engines << Sass::Rails::ScssTemplate if defined?(Sass::Rails::ScssTemplate)
         allowed_engines << Sass::Rails::SassTemplate if defined?(Sass::Rails::SassTemplate)
         allowed_engines << Less::Rails::LessTemplate if defined?(Less::Rails::LessTemplate)
-        processors = preprocessors + (attributes.engines & allowed_engines)
+        processors = attributes.processors - (attributes.engines - allowed_engines)
         @source = context.evaluate(pathname, :processors => processors)
       end
 
