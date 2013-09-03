@@ -43,6 +43,7 @@ module Sprockets
             asset_body = File.read(abs_digest_path)
 
             # Find all hashes in the asset body with a leading '-'
+            asset_body = asset_body.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
             asset_body.gsub!(DIGEST_REGEX) do |match|
               # Only remove if known digest
               $1.in?(@asset_digests.values) ? '' : match
