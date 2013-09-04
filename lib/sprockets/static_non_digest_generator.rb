@@ -42,8 +42,10 @@ module Sprockets
 
             asset_body = File.read(abs_digest_path)
 
+            # Encoding the body with UTF-8
+            asset_body = asset_body.encode('UTF-8', 'binary', :invalid => :replace, :undef => :replace, :replace => '')
+
             # Find all hashes in the asset body with a leading '-'
-            asset_body = asset_body.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
             asset_body.gsub!(DIGEST_REGEX) do |match|
               # Only remove if known digest
               $1.in?(@asset_digests.values) ? '' : match
@@ -82,7 +84,6 @@ module Sprockets
           end
         end
       end
-
 
       elapsed_time = ((Time.now.to_f - start_time) * 1000).to_i
       env.logger.debug "Generated non-digest assets in #{elapsed_time}ms"
