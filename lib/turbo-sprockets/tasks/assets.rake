@@ -67,19 +67,25 @@ namespace :assets do
       config.assets.digest = digest unless digest.nil?
       config.assets.digests        ||= {}
       config.assets.source_digests ||= {}
+      config.assets.handle_expiration = false if config.assets.handle_expiration.nil?
 
       env    = Rails.application.assets
       target = File.join(::Rails.public_path, config.assets.prefix)
 
-      # Before first compile, set the mtime of all current assets to current time.
-      # This time reflects the last time the assets were being used.
-      if digest.nil?
-        ::Rails.logger.debug "Updating mtimes for current assets..."
-        paths = known_assets.map { |asset| File.join(target, asset) }
-        paths.each_slice(100) do |slice|
-          # File.utime raises 'Operation not permitted' unless user is owner of file.
-          # Non-owners have permission to update mtime to the current time using 'touch'.
-          `touch -c #{slice.shelljoin}`
+      # This takes a long time to run if you aren't cleaning expired assets.
+      # You must call the assets:clean_expired rake task regularly if this is
+      # enabled
+      if config.assets.handle_expiration
+        # Before first compile, set the mtime of all current assets to current time.
+        # This time reflects the last time the assets were being used.
+        if digest.nil?
+          ::Rails.logger.debug "Updating mtimes for current assets..."
+          paths = known_assets.map { |asset| File.join(target, asset) }
+          paths.each_slice(100) do |slice|
+            # File.utime raises 'Operation not permitted' unless user is owner of file.
+            # Non-owners have permission to update mtime to the current time using 'touch'.
+            `touch -c #{slice.shelljoin}`
+          end
         end
       end
 
