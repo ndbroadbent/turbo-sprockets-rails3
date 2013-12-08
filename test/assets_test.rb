@@ -39,6 +39,18 @@ module ApplicationTests
       assert !File.exists?(filename), "#{filename} does exist"
     end
 
+    test "assets support stub" do
+      app_file "app/assets/javascripts/application.js", "//= require jquery\n//= require foo\n//= stub frameworks"
+      app_file "app/assets/javascripts/jquery.js", "jQuery = 1;"
+      app_file "app/assets/javascripts/frameworks.js", "//= require jquery"
+      app_file "app/assets/javascripts/foo.js", "foo = 1;"
+
+      require "#{app_path}/config/environment"
+
+      get "/assets/application.js"
+      assert_equal "foo = 1;", last_response.body.strip
+    end
+
     test "assets routes have higher priority" do
       app_file "app/assets/javascripts/demo.js.erb", "a = <%= image_path('rails.png').inspect %>;"
 
