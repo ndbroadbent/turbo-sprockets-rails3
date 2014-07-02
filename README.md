@@ -79,6 +79,17 @@ Please let me know if you have any problems with other gems, and I will either f
 
 `turbo-sprockets-rails3` should work out of the box with the latest version of Capistrano.
 
+Issue with Capistrano 2: Since the default behavior of Capistrano consists of creating "releases" every time a deploy occurs, one strategy might be to create a "shared assets" folder. You could create a symlink to the shared assets folder, every time you deploy.
+
+Capfile:
+
+    load 'deploy/assets'
+
+or in your Capistrano precompile task:
+
+    run "ln -s #{shared_path}/assets #{release_path}/public/assets"
+    run "cd #{current_path} && bundle exec rake assets:precompile RAILS_ENV=#{rails_env}"
+
 ### Heroku
 
 I've created a Heroku Buildpack for `turbo-sprockets-rails3` that keeps your assets cached between deploys, so you only need to recompile changed assets. It will automatically expire old assets that are no longer referenced by `manifest.yml` after 7 days, so your `public/assets` folder won't grow out of control.
