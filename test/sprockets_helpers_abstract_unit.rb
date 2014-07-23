@@ -27,7 +27,6 @@ if "ruby".encoding_aware?
   end
 end
 
-require 'test/unit'
 require 'abstract_controller'
 require 'action_controller'
 require 'action_view'
