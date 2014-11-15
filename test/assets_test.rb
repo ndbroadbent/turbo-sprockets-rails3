@@ -537,6 +537,20 @@ module ApplicationTests
       assert_equal 0, Dir.entries(Rails.application.assets.cache.cache_path).size - 2 # reject [".", ".."]
     end
 
+    test "assets:cache:clean should not throw an Exception if assets.cache is nil" do
+      ENV["RAILS_ENV"] = "production"
+
+      precompile!
+      require "#{app_path}/config/environment"
+      Rails.application.assets.instance_variable_set(:@cache, nil)
+
+      quietly do
+        assert_nothing_raised do
+          Dir.chdir(app_path){ `bundle exec rake assets:cache:clean` }
+        end
+      end
+    end
+
     private
 
     def app_with_assets_in_view
