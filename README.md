@@ -44,7 +44,7 @@ You can configure the expiry time by setting `config.assets.expire_after` in `co
 An expiry time of 2 weeks could be configured with the following code:
 
 ```ruby
-config.assets.expire_after 2.weeks
+config.assets.expire_after = 2.weeks
 ```
 
 ## Versioning
