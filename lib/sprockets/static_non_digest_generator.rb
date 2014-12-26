@@ -37,7 +37,7 @@ module Sprockets
           abs_logical_path = "#{@target}/#{logical_path}"
 
           # Remove known digests from css & js
-          if abs_digest_path.match(/\.(?:js|css)$/)
+          if abs_digest_path.match(/\.(?:js|css)$/) && File.file?(abs_digest_path)
             mtime = File.mtime(abs_digest_path)
 
             asset_body = File.read(abs_digest_path)
